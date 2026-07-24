@@ -15,7 +15,7 @@ namespace ProcureFlow.Domain.Entities
         public Warehouse Warehouse { get; set; } = null!;
         public int Quantity { get; set; }
         public int MinimumStock {  get; set; }
-        public int RecordLevel { get; set; }
+        public int ReorderLevel { get; set; }
         public ICollection<StockTransaction> StockTransactions { get; set; } = new List<StockTransaction>();
 
     }
