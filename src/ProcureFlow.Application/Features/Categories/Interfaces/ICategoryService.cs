@@ -9,10 +9,31 @@ namespace ProcureFlow.Application.Features.Categories.Interfaces
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<CategoryDto>> GetAllAsync();
-        Task<CategoryDto> GetByIdAsync(Guid Id);
-        Task<Guid> CreateAsync(CategoryDto dto); 
-        Task UpdateAsync(UpdateCategoryDto dto);
-        Task DeleteAsync(Guid Id);
+        // interface defines what the Category application service can do
+        Task<IReadOnlyList<CategoryDto>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<CategoryDto?> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default);
+        Task<CategoryDto?> CreateAsync(CategoryDto dto, CancellationToken cancellationToken = default); 
+        Task<CategoryDto?> UpdateAsync(Guid Id, UpdateCategoryDto dto, CancellationToken cancellationToken = default);
+        Task<bool> DeleteAsync(Guid Id, CancellationToken cancellationToken = default);
     }
 }
+
+
+/*
+    WHY THESE METHODS :
+
+    GetAllAsync
+        → GET /api/categories
+
+    GetByIdAsync
+        → GET /api/categories/{id}
+
+    CreateAsync
+        → POST /api/categories
+
+    UpdateAsync
+        → PUT /api/categories/{id}
+
+    DeleteAsync
+        → DELETE /api/categories/{id}
+ */
