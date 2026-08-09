@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProcureFlow.Infrastructure.Data;
-using ProcureFlow.Infrastructure.Interfaces;
 using ProcureFlow.Infrastructure.Repositories;
+using ProcureFlow.Application.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

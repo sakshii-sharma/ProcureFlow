@@ -8,9 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Identity\" />
-    <Folder Include="Persistence\" />
-    <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProcureFlow.Application\ProcureFlow.Application.csproj" />
     <ProjectReference Include="..\ProcureFlow.Domain\ProcureFlow.Domain.csproj" />
   </ItemGroup>
 

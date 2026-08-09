@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProcureFlow.Domain.Common;
 using ProcureFlow.Infrastructure.Data;
-using ProcureFlow.Infrastructure.Interfaces;
+using ProcureFlow.Application.Common.Interfaces;
+using System.Linq.Expressions;
 
 namespace ProcureFlow.Infrastructure.Repositories;
 
@@ -16,19 +17,37 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>    where T
         _dbSet = context.Set<TEntity>();
     }
 
-    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+    public virtual async Task<IReadOnlyList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.AsNoTracking().ToListAsync();
+        IQueryable<TEntity> query = _dbSet.AsNoTracking();
+
+        if(predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
+
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync(id, cancellationToken);
     }
 
-    public virtual async Task AddAsync(TEntity entity)
+    public virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity,bool>> predicate, CancellationToken cancellationToken = default)
     {
-        await _dbSet.AddAsync(entity);
+        return await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
+    }
+
+    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.AnyAsync(predicate, cancellationToken);
+    }
+
+    public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        await _dbSet.AddAsync(entity, cancellationToken);
     }
 
     public virtual void Update(TEntity entity)
@@ -41,8 +60,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>    where T
         _dbSet.Remove(entity);
     }
 
-    public virtual async Task<bool> ExistsAsync(Guid id)
+    public virtual async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.AnyAsync(x => x.Id == id);
+        return await _dbSet.AnyAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }
