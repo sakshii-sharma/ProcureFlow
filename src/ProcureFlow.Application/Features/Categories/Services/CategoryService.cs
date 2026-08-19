@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProcureFlow.Application.Common.Exceptions;
 
 namespace ProcureFlow.Application.Features.Categories.Services
 {
@@ -32,10 +33,15 @@ namespace ProcureFlow.Application.Features.Categories.Services
         {
             var category = await _repository.FirstOrDefaultAsync(c => c.Id == Id && !c.IsDeleted, cancellationToken);
 
-            return category is null ? null : MapToDto(category);
+            if (category == null)
+            {
+                throw new NotFoundException("CATEGORY_NOT_FOUND", "Category was not found.");
+            }
+
+            return MapToDto(category);
         }
 
-        public async Task<CategoryDto?> CreateAsync(CategoryDto dto, CancellationToken cancellationToken = default)
+        public async Task<CategoryDto?> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken = default)
         {
             string duplicateName = dto.Name;
 
@@ -43,7 +49,7 @@ namespace ProcureFlow.Application.Features.Categories.Services
 
             if (nameExists)
             {
-                throw new InvalidOperationException($"Category with name '{dto.Name}' already exists.");
+                throw new ConflictException( "CATEGORY_ALREADY_EXISTS", "A category with this name already exists." );
             }
 
             // dto to Category (entity)
@@ -63,15 +69,15 @@ namespace ProcureFlow.Application.Features.Categories.Services
         public async Task<CategoryDto?> UpdateAsync(Guid Id, UpdateCategoryDto dto, CancellationToken cancellationToken = default)
         {
             var category = await _repository.FirstOrDefaultAsync(c => c.Id == Id && !c.IsDeleted, cancellationToken);
-            if (category is null)
+            if (category == null)
             {
-                return null;
+                throw new NotFoundException("CATEGORY_NOT_FOUND", "Category was not found.");
             }
 
             bool nameExists = await _repository.AnyAsync(c => (c.Id != Id && c.Name == dto.Name && !c.IsDeleted) , cancellationToken);
             if (nameExists)
             {
-                throw new InvalidOperationException($"Category with name '{dto.Name}' already exists.");
+                throw new ConflictException("CATEGORY_ALREADY_EXISTS", "A category with this name already exists.");
             }
 
             category.Name = dto.Name.Trim();
@@ -89,9 +95,9 @@ namespace ProcureFlow.Application.Features.Categories.Services
         {
             var category = await _repository.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted, cancellationToken);
 
-            if (category is null)
+            if (category == null)
             {
-                return false;
+                throw new NotFoundException("CATEGORY_NOT_FOUND", "Category was not found.");
             }
 
             category.IsDeleted = true;

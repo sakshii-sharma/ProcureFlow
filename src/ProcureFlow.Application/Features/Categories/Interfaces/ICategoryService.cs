@@ -12,7 +12,7 @@ namespace ProcureFlow.Application.Features.Categories.Interfaces
         // interface defines what the Category application service can do
         Task<IReadOnlyList<CategoryDto>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<CategoryDto?> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default);
-        Task<CategoryDto?> CreateAsync(CategoryDto dto, CancellationToken cancellationToken = default); 
+        Task<CategoryDto?> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken = default); 
         Task<CategoryDto?> UpdateAsync(Guid Id, UpdateCategoryDto dto, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(Guid Id, CancellationToken cancellationToken = default);
     }

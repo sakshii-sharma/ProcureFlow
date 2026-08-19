@@ -1,20 +1,24 @@
+using ProcureFlow.API.Common.Exceptions;
+using ProcureFlow.Application;
 using ProcureFlow.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Application
+builder.Services.AddApplication();
 
-// Add services to the DI container.
-
+// Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Global Exception Handler
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -22,6 +26,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Global Exception Handling
+//app.UseExceptionHandler();
+app.UseExceptionHandler(_ => { });
 
 app.UseAuthorization();
 
