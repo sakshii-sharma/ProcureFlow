@@ -7,11 +7,11 @@ using ProcureFlow.Application.Features.Categories.Interfaces;
 namespace ProcureFlow.API.Controllers;
 
 [Route("api/[controller]")]
-public class CategoriesController : BaseController
+public class CategoryController : BaseController
 {
     private readonly ICategoryService _categoryService;
 
-    public CategoriesController(ICategoryService categoryService)
+    public CategoryController(ICategoryService categoryService)
     {
         _categoryService = categoryService;
     }

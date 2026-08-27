@@ -30,6 +30,11 @@ namespace ProcureFlow.Infrastructure.Configurations
 
             builder.HasIndex(p => p.SKU)
                    .IsUnique();
+
+            builder.HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

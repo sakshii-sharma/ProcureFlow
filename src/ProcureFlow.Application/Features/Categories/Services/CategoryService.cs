@@ -29,7 +29,7 @@ namespace ProcureFlow.Application.Features.Categories.Services
             return categories.Select(MapToDto).ToList(); 
         }
         
-        public async Task<CategoryDto?> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default)
+        public async Task<CategoryDto> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default)
         {
             var category = await _repository.FirstOrDefaultAsync(c => c.Id == Id && !c.IsDeleted, cancellationToken);
 
@@ -41,7 +41,7 @@ namespace ProcureFlow.Application.Features.Categories.Services
             return MapToDto(category);
         }
 
-        public async Task<CategoryDto?> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken = default)
+        public async Task<CategoryDto> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken = default)
         {
             string duplicateName = dto.Name;
 
@@ -66,7 +66,7 @@ namespace ProcureFlow.Application.Features.Categories.Services
         }
 
 
-        public async Task<CategoryDto?> UpdateAsync(Guid Id, UpdateCategoryDto dto, CancellationToken cancellationToken = default)
+        public async Task<CategoryDto> UpdateAsync(Guid Id, UpdateCategoryDto dto, CancellationToken cancellationToken = default)
         {
             var category = await _repository.FirstOrDefaultAsync(c => c.Id == Id && !c.IsDeleted, cancellationToken);
             if (category == null)

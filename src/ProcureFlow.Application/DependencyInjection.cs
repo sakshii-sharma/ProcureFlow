@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProcureFlow.Application.Features.Products.Interfaces;
+using ProcureFlow.Application.Features.Products.Services;
 
 namespace ProcureFlow.Application
 {
@@ -16,6 +18,7 @@ namespace ProcureFlow.Application
         {
             // Application Services
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
 
             // Validators
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
