@@ -5,6 +5,7 @@ using ProcureFlow.Application.Features.Products.DTOs;
 using ProcureFlow.Application.Features.Products.Interfaces;
 using ProcureFlow.Domain.Entities;
 using ProcureFlow.API.Common.Controllers;
+using ProcureFlow.Application.Common.Models;
 
 namespace ProcureFlow.API.Controllers
 {
@@ -19,6 +20,19 @@ namespace ProcureFlow.API.Controllers
             _productService = productService;
         }
 
+
+        // GET: api/Product?pageNumber=1&pageSize=20
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<PaginatedResult<ProductDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse<PaginatedResult<ProductDto>>>> GetAll( [FromQuery] PaginationRequest request, CancellationToken cancellationToken)
+        {
+            var products = await _productService.GetAllPagedAsync(request, cancellationToken);
+
+            return OkResponse( products, "Products fetched successfully." );
+        }
+
+        /*
         // GET: api/products
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<ProductDto>>), StatusCodes.Status200OK)]
@@ -28,14 +42,15 @@ namespace ProcureFlow.API.Controllers
 
             return OkResponse(products, "Products fetched successfully");
         }
+        */
 
         // GET: api/products/{id}
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(ApiResponse<ProductDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApiResponse<ProductDto>>> GetById(Guid Id, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<ProductDto>>> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var product = await _productService.GetByIdAsync(Id, cancellationToken);
+            var product = await _productService.GetByIdAsync(id, cancellationToken);
 
             return OkResponse(product, "Product fetched successfully");
         }

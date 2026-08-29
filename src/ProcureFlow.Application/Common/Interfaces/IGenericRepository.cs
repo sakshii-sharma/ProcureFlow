@@ -12,6 +12,7 @@ namespace ProcureFlow.Application.Common.Interfaces
     {
 
         Task<IReadOnlyList<TEntity>> GetAllAsync(Expression<Func<TEntity,bool>>? predicate = null, CancellationToken cancellationToken = default); // getAll with or without search parameter - predicate
+        Task<(IReadOnlyList<TEntity> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default);
         Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity,bool>> predicate, CancellationToken cancellationToken = default);
         Task<bool> AnyAsync(Expression<Func<TEntity,bool>> predicate, CancellationToken cancellationToken = default);

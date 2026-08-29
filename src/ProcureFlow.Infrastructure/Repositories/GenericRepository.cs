@@ -29,6 +29,25 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>  where TEn
         return await query.ToListAsync(cancellationToken);
     }
 
+    public virtual async Task<(IReadOnlyList<TEntity> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default)
+    {
+        IQueryable<TEntity> query = _dbSet.AsNoTracking();
+
+        if(predicate is not null)
+        {
+            query = query.Where(predicate);
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        // for pagination the items should be ordered | order by
+        var items = await query.OrderBy(x => x.Id)
+                               .Skip((pageNumber-1)*pageSize)
+                               .Take(pageSize)
+                               .ToListAsync(cancellationToken);    
+
+        return (items, totalCount);
+    }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {

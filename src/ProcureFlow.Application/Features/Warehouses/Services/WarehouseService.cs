@@ -62,7 +62,7 @@ namespace ProcureFlow.Application.Features.Warehouses.Services
 
             if (warehouse is null)
             {
-                throw new NotFoundException("Warehouse_Not_Found", "Warehouse not found.");
+                throw new NotFoundException("WAREHOUSE_NOT_FOUND", "Warehouse not found.");
             }
 
             warehouse.Name = dto.Name;
@@ -80,7 +80,7 @@ namespace ProcureFlow.Application.Features.Warehouses.Services
 
             if (warehouse is null)
             {
-                throw new NotFoundException("Warehouse_Not_Found", "Warehouse not found.");
+                throw new NotFoundException("WAREHOUSE_NOT_FOUND", "Warehouse not found.");
             }
 
             _warehouseRepository.Update(warehouse);

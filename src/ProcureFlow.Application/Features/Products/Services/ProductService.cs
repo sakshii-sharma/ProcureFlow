@@ -1,5 +1,6 @@
 ﻿using ProcureFlow.Application.Common.Exceptions;
 using ProcureFlow.Application.Common.Interfaces;
+using ProcureFlow.Application.Common.Models;
 using ProcureFlow.Application.Features.Categories.DTOs;
 using ProcureFlow.Application.Features.Categories.Interfaces;
 using ProcureFlow.Application.Features.Products.DTOs;
@@ -32,6 +33,21 @@ namespace ProcureFlow.Application.Features.Products.Services
             return products.Select(MapToDto).ToList();
         }
 
+        public async Task<PaginatedResult<ProductDto>> GetAllPagedAsync(PaginationRequest request, CancellationToken cancellationToken = default)
+        {
+            var result = await _productRepository.GetPagedAsync(request.PageNumber, request.PageSize, p => !p.IsDeleted, cancellationToken);
+
+            var items = result.Items.Select(MapToDto).ToList();
+
+            return new PaginatedResult<ProductDto>
+            {
+                Items = items,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                TotalCount = result.TotalCount
+            };
+        }
+
         public async Task<ProductDto> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default)
         {
             var product = await _productRepository.FirstOrDefaultAsync(p => p.Id == Id && !p.IsDeleted, cancellationToken);
@@ -59,7 +75,7 @@ namespace ProcureFlow.Application.Features.Products.Services
 
             if (skuExists)
             {
-                throw new ConflictException("SKU_Already_Present", "SKU already present");
+                throw new ConflictException("SKU_ALREADY_PRESENT", "SKU already present");
             }
 
             // dto to Category (entity)
@@ -92,7 +108,7 @@ namespace ProcureFlow.Application.Features.Products.Services
             bool skuExists = await _productRepository.AnyAsync(p => p.SKU == dto.SKU, cancellationToken);
             if (skuExists)
             {
-                throw new ConflictException("SKU_Already_Present", "A Product with this SKU already exists.");
+                throw new ConflictException("SKU_ALREADY_PRESENT", "A Product with this SKU already exists.");
             }
 
             // check Category Exists

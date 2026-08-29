@@ -13,9 +13,6 @@ namespace ProcureFlow.Application.Features.Categories.Validators
     {
         public UpdateCategoryValidator()
         {
-            RuleFor(x => x.Id)
-            .NotEmpty()
-            .WithMessage("Category Id is required.");
 
             RuleFor(x => x.Name)
                 .NotEmpty()
