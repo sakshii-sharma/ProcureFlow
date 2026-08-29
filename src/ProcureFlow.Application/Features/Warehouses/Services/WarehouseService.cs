@@ -32,7 +32,7 @@ namespace ProcureFlow.Application.Features.Warehouses.Services
         {
             var warehouse = await _warehouseRepository.FirstOrDefaultAsync(w => w.Id == Id && !w.IsDeleted, cancellationToken);
 
-            if(warehouse == null)
+            if(warehouse is null)
             {
                 throw new NotFoundException("WAREHOUSE_NOT_FOUND", "warehouse was not found.");
             }
@@ -60,7 +60,7 @@ namespace ProcureFlow.Application.Features.Warehouses.Services
         {
             var warehouse = await _warehouseRepository.GetByIdAsync(id, cancellationToken);
 
-            if (warehouse == null)
+            if (warehouse is null)
             {
                 throw new NotFoundException("Warehouse_Not_Found", "Warehouse not found.");
             }
@@ -78,7 +78,7 @@ namespace ProcureFlow.Application.Features.Warehouses.Services
         {
             var warehouse = await _warehouseRepository.GetByIdAsync(id, cancellationToken);
 
-            if (warehouse == null)
+            if (warehouse is null)
             {
                 throw new NotFoundException("Warehouse_Not_Found", "Warehouse not found.");
             }
@@ -94,7 +94,7 @@ namespace ProcureFlow.Application.Features.Warehouses.Services
         // Method to Map Entity(Repository Layer) TO Dto(Service/Application Layer)
         public static WarehouseDto MapToDto(Warehouse entity)
         {
-            WarehouseDto dto = new WarehouseDto
+            WarehouseDto dto = new ()
             {
                 Id = entity.Id,
                 Name = entity.Name,

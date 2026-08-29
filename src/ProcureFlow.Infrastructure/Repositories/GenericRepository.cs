@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace ProcureFlow.Infrastructure.Repositories;
 
-public class GenericRepository<TEntity> : IGenericRepository<TEntity>    where TEntity : BaseEntity
+public class GenericRepository<TEntity> : IGenericRepository<TEntity>  where TEntity : BaseEntity
 {
     protected readonly ProcureFlowDbContext _context;
     protected readonly DbSet<TEntity> _dbSet;
@@ -32,7 +32,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>    where T
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync(id, cancellationToken);
+        return await _dbSet.FindAsync([id], cancellationToken);
     }
 
     public virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity,bool>> predicate, CancellationToken cancellationToken = default)

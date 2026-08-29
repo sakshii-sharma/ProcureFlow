@@ -11,7 +11,9 @@ namespace ProcureFlow.Domain.Entities
     {
         public string Name { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
-        public ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
+
+        //public ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
+        public ICollection<Inventory> Inventories { get; set; } = [];
 
     }
 }

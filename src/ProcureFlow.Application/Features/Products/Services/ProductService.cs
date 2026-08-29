@@ -36,7 +36,7 @@ namespace ProcureFlow.Application.Features.Products.Services
         {
             var product = await _productRepository.FirstOrDefaultAsync(p => p.Id == Id && !p.IsDeleted, cancellationToken);
 
-            if (product == null)
+            if (product is null)
             {
                 throw new NotFoundException("PRODUCT_NOT_FOUND", "product was not found.");
             }
@@ -83,7 +83,7 @@ namespace ProcureFlow.Application.Features.Products.Services
         {
             
             var product = await _productRepository.FirstOrDefaultAsync(p => p.Id == Id && !p.IsDeleted, cancellationToken);
-            if (product == null)
+            if (product is null)
             {
                 throw new NotFoundException("PRODUCT_NOT_FOUND", "Product was not found.");
             }
@@ -120,7 +120,7 @@ namespace ProcureFlow.Application.Features.Products.Services
         {
             var product = await _productRepository.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
 
-            if (product == null)
+            if (product is null)
             {
                 throw new NotFoundException("PRODUCT_NOT_FOUND", "product was not found.");
             }
@@ -139,7 +139,7 @@ namespace ProcureFlow.Application.Features.Products.Services
 
         public static ProductDto MapToDto(Product product)
         {
-            ProductDto dto = new ProductDto
+            return new ProductDto          
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -148,7 +148,6 @@ namespace ProcureFlow.Application.Features.Products.Services
                 CategoryId = product.CategoryId
             };
 
-            return dto;
         }
     }
 }
