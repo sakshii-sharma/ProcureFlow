@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using ProcureFlow.API.Common.Responses;
 using ProcureFlow.Application.Features.Suppliers.DTOs;
 using ProcureFlow.Application.Features.Suppliers.Interfaces;
+using ProcureFlow.Application.Common.Models;
+using ProcureFlow.Application.Features.Products.DTOs;
 
 namespace ProcureFlow.API.Controllers
 {
@@ -19,6 +21,20 @@ namespace ProcureFlow.API.Controllers
             _supplierService = supplierService;
         }
 
+
+        // GET: api/supplier?pageNumber=1&pageSize=20
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<PaginatedResult<SupplierDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse<PaginatedResult<SupplierDto>>>> GetAll([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
+        {
+            var suppliers = await _supplierService.GetAllPagedAsync(request, cancellationToken);
+
+            return OkResponse(suppliers, "Suppliers fetched successfully.");
+        }
+
+
+        /*
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<SupplierDto>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyList<SupplierDto>>>> GetAll(CancellationToken cancellationToken = default)
@@ -27,6 +43,7 @@ namespace ProcureFlow.API.Controllers
 
             return OkResponse(suppliers, "Suppliers fetched successfully.");
         }
+        */
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(ApiResponse<SupplierDto>), StatusCodes.Status200OK)]

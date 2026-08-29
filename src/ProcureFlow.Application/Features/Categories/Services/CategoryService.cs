@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProcureFlow.Application.Common.Exceptions;
+using ProcureFlow.Application.Common.Models;
+using ProcureFlow.Application.Features.Products.DTOs;
 
 namespace ProcureFlow.Application.Features.Categories.Services
 {
@@ -28,7 +30,22 @@ namespace ProcureFlow.Application.Features.Categories.Services
 
             return categories.Select(MapToDto).ToList(); 
         }
-        
+
+        public async Task<PaginatedResult<CategoryDto>> GetAllPagedAsync(PaginationRequest request, CancellationToken cancellationToken = default)
+        {
+            var result = await _repository.GetPagedAsync(request.PageNumber, request.PageSize, p => !p.IsDeleted, cancellationToken);
+
+            var items = result.Items.Select(MapToDto).ToList();
+
+            return new PaginatedResult<CategoryDto>
+            {
+                Items = items,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                TotalCount = result.TotalCount
+            };
+        }
+
         public async Task<CategoryDto> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default)
         {
             var category = await _repository.FirstOrDefaultAsync(c => c.Id == Id && !c.IsDeleted, cancellationToken);

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ProcureFlow.Application.Common.Exceptions;
 using ProcureFlow.Application.Common.Interfaces;
+using ProcureFlow.Application.Common.Models;
+using ProcureFlow.Application.Features.Categories.DTOs;
 using ProcureFlow.Application.Features.Suppliers.DTOs;
 using ProcureFlow.Application.Features.Suppliers.Interfaces;
 using ProcureFlow.Domain.Entities;
@@ -25,6 +27,21 @@ namespace ProcureFlow.Application.Features.Suppliers.Services
             var suppliers = await _supplierRepository.GetAllAsync(s => !s.IsDeleted, cancellationToken);
 
             return suppliers.Select(MapToDto).ToList();
+        }
+
+        public async Task<PaginatedResult<SupplierDto>> GetAllPagedAsync(PaginationRequest request, CancellationToken cancellationToken = default)
+        {
+            var result = await _supplierRepository.GetPagedAsync(request.PageNumber, request.PageSize, p => !p.IsDeleted, cancellationToken);
+
+            var items = result.Items.Select(MapToDto).ToList();
+
+            return new PaginatedResult<SupplierDto>
+            {
+                Items = items,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                TotalCount = result.TotalCount
+            };
         }
 
         public async Task<SupplierDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

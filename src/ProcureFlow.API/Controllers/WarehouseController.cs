@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ProcureFlow.API.Common.Controllers;
 using ProcureFlow.API.Common.Responses;
+using ProcureFlow.Application.Common.Models;
+using ProcureFlow.Application.Features.Suppliers.DTOs;
 using ProcureFlow.Application.Features.Warehouses.DTOs;
 using ProcureFlow.Application.Features.Warehouses.Interfaces;
 
@@ -18,6 +20,18 @@ namespace ProcureFlow.API.Controllers
             _warehouseService = warehouseService;
         }
 
+        // GET: api/warehouse?pageNumber=1&pageSize=20
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<PaginatedResult<WarehouseDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse<PaginatedResult<WarehouseDto>>>> GetAll([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
+        {
+            var warehouses = await _warehouseService.GetAllPagedAsync(request, cancellationToken);
+
+            return OkResponse(warehouses, "Suppliers fetched successfully.");
+        }
+
+        /*
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<WarehouseDto>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyList<WarehouseDto>>>> GetAll(CancellationToken cancellationToken = default)
@@ -26,6 +40,7 @@ namespace ProcureFlow.API.Controllers
 
             return OkResponse(warehouses, "Warehouses fetched successfully.");
         }
+        */
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(ApiResponse<WarehouseDto>), StatusCodes.Status200OK)]

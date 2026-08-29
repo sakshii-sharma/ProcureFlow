@@ -1,4 +1,6 @@
-﻿using ProcureFlow.Application.Features.Categories.DTOs;
+﻿using ProcureFlow.Application.Common.Models;
+using ProcureFlow.Application.Features.Categories.DTOs;
+using ProcureFlow.Application.Features.Products.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,8 @@ namespace ProcureFlow.Application.Features.Categories.Interfaces
     {
         // interface defines what the Category application service can do
         Task<IReadOnlyList<CategoryDto>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<PaginatedResult<CategoryDto>> GetAllPagedAsync(PaginationRequest request, CancellationToken cancellationToken = default);
+
         Task<CategoryDto> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default);
         Task<CategoryDto> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken = default); 
         Task<CategoryDto> UpdateAsync(Guid Id, UpdateCategoryDto dto, CancellationToken cancellationToken = default);

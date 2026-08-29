@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProcureFlow.Application.Common.Models;
+using ProcureFlow.Application.Features.Suppliers.DTOs;
 
 namespace ProcureFlow.Application.Features.Warehouses.Services
 {
@@ -26,6 +28,21 @@ namespace ProcureFlow.Application.Features.Warehouses.Services
             var warehouses = await _warehouseRepository.GetAllAsync(w => !w.IsDeleted , cancellationToken);
 
             return warehouses.Select(MapToDto).ToList();
+        }
+
+        public async Task<PaginatedResult<WarehouseDto>> GetAllPagedAsync(PaginationRequest request, CancellationToken cancellationToken = default)
+        {
+            var result = await _warehouseRepository.GetPagedAsync(request.PageNumber, request.PageSize, p => !p.IsDeleted, cancellationToken);
+
+            var items = result.Items.Select(MapToDto).ToList();
+
+            return new PaginatedResult<WarehouseDto>
+            {
+                Items = items,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                TotalCount = result.TotalCount
+            };
         }
 
         public async Task<WarehouseDto> GetByIdAsync(Guid Id, CancellationToken cancellationToken = default)

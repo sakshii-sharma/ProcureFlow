@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProcureFlow.API.Common.Controllers;
 using ProcureFlow.API.Common.Responses;
+using ProcureFlow.Application.Common.Models;
 using ProcureFlow.Application.Features.Categories.DTOs;
 using ProcureFlow.Application.Features.Categories.Interfaces;
+using ProcureFlow.Application.Features.Products.DTOs;
 
 namespace ProcureFlow.API.Controllers;
 
@@ -16,6 +18,19 @@ public class CategoryController : BaseController
         _categoryService = categoryService;
     }
 
+
+    // GET: api/categories?pageNumber=1&pageSize=20
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponse<PaginatedResult<CategoryDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ApiResponse<PaginatedResult<CategoryDto>>>> GetAll([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
+    {
+        var categories = await _categoryService.GetAllPagedAsync(request, cancellationToken);
+
+        return OkResponse(categories, "Categories fetched successfully.");
+    }
+
+    /*
     // GET: api/categories
     [HttpGet]
     [ProducesResponseType( typeof(ApiResponse<IReadOnlyList<CategoryDto>>), StatusCodes.Status200OK)]
@@ -25,6 +40,8 @@ public class CategoryController : BaseController
 
         return OkResponse(categories, "Categories fetched successfully.");
     }
+    */
+
 
     // GET: api/categories/{id}
     [HttpGet("{id:guid}")]
